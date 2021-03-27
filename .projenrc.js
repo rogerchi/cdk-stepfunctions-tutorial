@@ -1,10 +1,19 @@
-const { AwsCdkTypeScriptApp } = require('projen');
+const { AwsCdkTypeScriptApp, JsonFile, TextFile } = require('projen');
 
 const project = new AwsCdkTypeScriptApp({
-  cdkVersion: '1.73.0',
-  jsiiFqn: "projen.AwsCdkTypeScriptApp",
+  cdkVersion: '1.87.1',
+  jsiiFqn: 'projen.AwsCdkTypeScriptApp',
   name: 'cdk-stepfunctions-tutorial',
-
+  authorEmail: 'roger@rogerchi.com',
+  authorName: 'Roger Chi',
+  authorOrganization: 'Roger Chi Consulting',
+  authorUrl: 'https://rogerchi.com',
+  cdkDependencies: [
+    '@aws-cdk/core',
+    '@aws-cdk/aws-stepfunctions',
+    '@aws-cdk/aws-stepfunctions-tasks',
+  ],
+  defaultReleaseBranch: 'main',
   /* AwsCdkTypeScriptAppOptions */
   // appEntrypoint: 'main.ts',                                                 /* The CDK app's entrypoint (relative to the source directory, which is "src" by default). */
   // cdkDependencies: undefined,                                               /* Which AWS CDK modules (those that start with "@aws-cdk/") this app uses. */
@@ -107,5 +116,23 @@ const project = new AwsCdkTypeScriptApp({
   // tsconfig: undefined,                                                      /* Custom TSConfig. */
   // typescriptVersion: '^3.9.5',                                              /* TypeScript version to use. */
 });
+
+project.eslint.addOverride({
+  files: ['*.ts', '*.tsx'],
+  rules: {
+    '@typescript-eslint/indent': 'off',
+  },
+});
+
+new JsonFile(project, '.prettierrc', {
+  obj: {
+    semi: true,
+    tabWidth: 2,
+    trailingComma: 'all',
+    singleQuote: true,
+  },
+});
+
+new TextFile(project, '.nvmrc', { lines: ['v14.15.4'] });
 
 project.synth();
